@@ -1,0 +1,9 @@
+black - screen color
+white - text color
+#B0B0B0 - button color
+black - button text color
+#808080 - activated_button_color
+red - game over text color
+#A1FF17 - snake color
+black - eye color
+red - food color
