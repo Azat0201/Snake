@@ -8,7 +8,7 @@ class Button:
     color_class = None
     activated_color_class = None
 
-    def __init__(self, x, y, function=None, text=None, visible=True, activator=None, additional_text=None,
+    def __init__(self, x, y, function=None, text=None, visible=True, active=None, additional_text=None,
                  parameters=None, width=None, height=None, gap=None, color=None, activated_color=None):
         if text is None:
             text = ''
@@ -16,21 +16,32 @@ class Button:
             visible = True
         if parameters is None:
             parameters = ()
-        for par in ('width', 'height', 'gap', 'color', 'activated_color'):
-            if eval(par) is None:
-                value = self.__class__.__dict__[par + '_class']
-            else:
-                value = eval(par)
-            self.__dict__['_' + par] = value
-        self._active = False
-        self._visible = visible
-        self._rect = pygame.Rect(x - self._width // 2, y - self._height // 2, self._width - self._gap // 2, self._height - self._gap // 2)
-        self._frame = pygame.Rect(x - self._width // 2, y - self._height // 2, self._width, self._height)
+        if width is None:
+            width = self.__class__.width_class
+        if height is None:
+            height = self.__class__.height_class
+        if gap is None:
+            gap = self.__class__.gap_class
+        if color is None:
+            color = self.__class__.color_class
+        if activated_color is None:
+            activated_color = self.__class__.activated_color_class
+
         self._function = function
         self._text = text
+        self._visible = visible
+        self._active = active
         self._additional_text = additional_text
         self._parameters = (self,) if parameters == 'self' else parameters
-        self._activator = activator
+        self._width = width
+        self._height = height
+        self._gap = gap
+        self._color = color
+        self._activated_color = activated_color
+
+        self._pressed = False
+        self._rect = pygame.Rect(x - self._width // 2, y - self._height // 2, self._width - self._gap // 2, self._height - self._gap // 2)
+        self._frame = pygame.Rect(x - self._width // 2, y - self._height // 2, self._width, self._height)
         self._position = x, y
 
     def use_function(self):
@@ -41,9 +52,9 @@ class Button:
     def color(self):
         if not self._function:
             return self._color
-        active = self._active
-        self._active = False
-        return self._activated_color if self._activator or active else self._color
+        active = self._pressed
+        self._pressed = False
+        return self._activated_color if self._active or active else self._color
 
     @property
     def rect(self):
@@ -102,8 +113,8 @@ class Button:
         if isinstance(other, bool) or other is None:
             self._visible = other
 
-    def change_active(self):
-        self._active = not self._active
+    def change_pressed(self):
+        self._pressed = True
 
     def change_visible(self):
         self._visible = not self._visible
