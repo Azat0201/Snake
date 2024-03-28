@@ -40,13 +40,19 @@ class Button:
         self._activated_color = activated_color
 
         self._pressed = False
-        self._rect = pygame.Rect(x - self._width // 2, y - self._height // 2, self._width - self._gap // 2, self._height - self._gap // 2)
-        self._frame = pygame.Rect(x - self._width // 2, y - self._height // 2, self._width, self._height)
+        self._rect = pygame.Rect(x - self._width / 2, y - self._height / 2, self._width - self._gap / 2, self._height - self._gap / 2)
+        self._frame = pygame.Rect(x - self._width / 2, y - self._height / 2, self._width, self._height)
         self._position = x, y
 
     def use_function(self):
         if self._function:
             self._function(*self._parameters)
+
+    def change_pressed(self):
+        self._pressed = True
+
+    def change_visible(self):
+        self._visible = not self._visible
 
     @property
     def color(self):
@@ -112,9 +118,3 @@ class Button:
     def visible(self, other):
         if isinstance(other, bool) or other is None:
             self._visible = other
-
-    def change_pressed(self):
-        self._pressed = True
-
-    def change_visible(self):
-        self._visible = not self._visible

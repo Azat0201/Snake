@@ -1,3 +1,3 @@
-70 - snake speed (the lower value, the higher speed)
-20 - speed difference (the difference between the speeds of different difficulty levels)
-1000 - food spawn frequency (the lower value, the more amount)
+7 - snake speed (the lower value, the higher speed)
+2 - speed difference (the difference between the speeds of different difficulty levels)
+100 - food spawn frequency (the lower value, the more amount)

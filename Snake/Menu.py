@@ -29,8 +29,9 @@ window_sizes = (monitor_size, ) + tuple(filter(
 fps = 60
 
 
-def start_game():
-    Snake.new_loop(window_sizes[current_size_ind], current_difficult, is_increase_food_time, can_crash_wall, can_crash_self)
+def start_game(first_lunch=False):
+    Snake.new_loop(window_sizes[current_size_ind], current_difficult,
+                   is_increase_food_time, can_crash_wall, can_crash_self, first_lunch)
 
 
 def change_difficult(button):
@@ -81,18 +82,18 @@ def activate(func):
     func()
 
 
-def change_size_window(button):
-    global current_size_ind
+def increase_size_window(button):
+    global current_size_ind, setting_buttons
     current_size_ind = (current_size_ind + 1) % len(window_sizes)
     button.title = f'{window_sizes[current_size_ind][0]}x{window_sizes[current_size_ind][1]}'
-    new_loop()
+    new_loop(setting_buttons[0].visible)
 
 
-def increase_size_window(button):
-    global current_size_ind
+def decrease_size_window(button):
+    global current_size_ind, setting_buttons
     current_size_ind = (current_size_ind - 1) % len(window_sizes)
     button.title = f'{window_sizes[current_size_ind][0]}x{window_sizes[current_size_ind][1]}'
-    new_loop()
+    new_loop(setting_buttons[0].visible)
     
 
 def reset_record(button):
@@ -100,7 +101,7 @@ def reset_record(button):
     show_choice_button()
 
 
-def reset_record_function():  # !!!
+def reset_record_function():
     with open('score') as file:
         line = file.readline().split()
         line[0] = '0'
@@ -109,7 +110,7 @@ def reset_record_function():  # !!!
         file.write(' '.join(line) + '\n')
 
     hide_choice_button()
-    new_loop()
+    new_loop(setting_buttons[0].visible)
 
 
 def show_text(text, x, y, width, height, color=button_text_color, centered_x=True, centered_y=True):
@@ -136,14 +137,14 @@ def show_text(text, x, y, width, height, color=button_text_color, centered_x=Tru
         window.blit(text_line, pos)
 
 
-def move_window(x, y):  # !!!
+def move_window(x, y):
     size = pygame.display.get_wm_info()['window']
     ctypes.windll.user32.MoveWindow(
         size, x - 8, y - 31, window_width, window_height, False
     )
 
 
-def new_loop():
+def new_loop(show_buttons=False):
     global window, size_font, font
     global buttons, setting_buttons, choice_buttons
     global window_width, window_height
@@ -159,6 +160,7 @@ def new_loop():
     button_x2 = button_x + button_width + gap
     button_y = button_height + gap
     font = pygame.font.SysFont('verdana', size_font)
+    clock = pygame.time.Clock()
 
     Button.width_class = button_width
     Button.height_class = button_height
@@ -182,12 +184,12 @@ def new_loop():
         (button_x, button_y * 2, change_difficult, difficulties[current_difficult], None, None, None, 'self'),
         (button_x, button_y * 3, show_settings, 'Настройки'),
         (button_x, button_y * 4, quit, 'Выйти'),
-        (button_x2, button_y * 1, change_is_increase_food_time, 'Увеличение времени создание еды от количества еды', False, is_increase_food_time, 'Увеличивает скорость появления еды для змейки в зависимости от количества её', 'self'),
-        (button_x2, button_y * 2, change_can_crash_wall, 'Врезаться в стены', False, can_crash_wall, 'Позволяет змейки проходить через стены', 'self'),
-        (button_x2, button_y * 3, change_can_crash_self, 'Врезаться в себя', False, can_crash_self, 'Позволяет змейки проходить через себя', 'self'),
-        (button_x2 - button_width / 8, button_y * 4, change_size_window, f'{window_width}x{window_height}', False, None, str_sizes, 'self', button_width - button_width // 4),
-        (button_x2 + button_width / 2.5 - gap // 2, button_y * 4, increase_size_window, '/\\', False, None, str_sizes, 'self', button_width // 4 - gap),
-        (button_x2, button_y * 5, reset_record, 'Сбросить рекорд', False,  None, 'Сбрасывает лучший результат'),
+        (button_x2, button_y * 1, change_is_increase_food_time, 'Увеличение времени создание еды от количества еды', show_buttons, is_increase_food_time, 'Увеличивает скорость появления еды для змейки в зависимости от количества её', 'self'),
+        (button_x2, button_y * 2, change_can_crash_wall, 'Врезаться в стены', show_buttons, can_crash_wall, 'Позволяет змейки проходить через стены', 'self'),
+        (button_x2, button_y * 3, change_can_crash_self, 'Врезаться в себя', show_buttons, can_crash_self, 'Позволяет змейки проходить через себя', 'self'),
+        (button_x2 - button_width / 8, button_y * 4, increase_size_window, f'{window_width}x{window_height}', show_buttons, None, str_sizes, 'self', button_width - button_width // 4),
+        (button_x2 + button_width / 2.5 - gap // 2, button_y * 4, decrease_size_window, '/\\', show_buttons, None, str_sizes, 'self', button_width // 4 - gap),
+        (button_x2, button_y * 5, reset_record, 'Сбросить рекорд', show_buttons,  None, 'Сбрасывает лучший результат'),
         ((button_x - button_width / 4) / 2, button_y * 2, None, 'Вы уверенны?', False, None, None, None, None, None, None, None, False),
         ((button_x - button_width / 4 - button_width / 2 - gap / 2) / 2, button_y * 3, activate, 'Да', False, None, None, None, (button_width - gap) / 2),
         ((button_x - button_width / 4 + button_width / 2 + gap / 2) / 2, button_y * 3, hide_choice_button, 'Нет', False, None, None, None, (button_width - gap) / 2),
@@ -214,11 +216,11 @@ def new_loop():
     buttons = (button_start, button_difficulty, button_show_settings, button_exit) + setting_buttons + choice_buttons
 
     while True:
-        pygame.time.Clock().tick(fps)
+        clock.tick(fps)
         window.fill(window_color)
 
         for event in pygame.event.get():
-            if event.type == pygame.quit:
+            if event.type == pygame.QUIT:
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for button in buttons:
@@ -245,4 +247,5 @@ def new_loop():
 
 
 if __name__ == '__main__':
+    start_game(True)
     new_loop()
