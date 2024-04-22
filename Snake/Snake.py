@@ -41,7 +41,7 @@ def new_loop(window_size, difficult, increase_food_time, crash_wall, crash_self,
     if first_lunch:
         go_menu()
 
-    with open('settings') as settings, open('colors') as colors, open('score') as best_score_file:
+    with open('settings.txt') as settings, open('colors.txt') as colors, open('score.txt') as best_score_file:
         best_score = int(best_score_file.readline().split()[0])
         data = [int(settings.readline().split()[0]) for _ in range(3)]
         colors = [colors.readline().split()[0] for _ in range(9)]
@@ -90,11 +90,11 @@ def new_loop(window_size, difficult, increase_food_time, crash_wall, crash_self,
 def write_best_score():
     global snake, best_score
     best_score = max(len(snake) - START_LEN_SNAKE, best_score)
-    with open('score') as file:
+    with open('score.txt') as file:
         line = file.readline().split()
         line[0] = str(best_score)
 
-    with open('score', 'w') as file:
+    with open('score.txt', 'w') as file:
         file.write(' '.join(line) + '\n')
 
 

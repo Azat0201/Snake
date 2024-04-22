@@ -8,7 +8,7 @@ global buttons, setting_buttons, choice_buttons
 global window_width, window_height
 
 
-with open('Colors') as colors:
+with open('Colors.txt') as colors:
     window_color, text_color, button_color, button_text_color, activated_button_color = (colors.readline().split()[0] for _ in range(5))
 
 difficulties = ('Лёгкий', 'Средний', 'Сложный')
@@ -102,11 +102,11 @@ def reset_record(button):
 
 
 def reset_record_function():
-    with open('score') as file:
+    with open('score.txt') as file:
         line = file.readline().split()
         line[0] = '0'
 
-    with open('score', 'w') as file:
+    with open('score.txt', 'w') as file:
         file.write(' '.join(line) + '\n')
 
     hide_choice_button()
@@ -140,7 +140,7 @@ def show_text(text, x, y, width, height, color=button_text_color, centered_x=Tru
 def move_window(x, y):
     size = pygame.display.get_wm_info()['window']
     ctypes.windll.user32.MoveWindow(
-        size, x - 8, y - 31, window_width, window_height, False
+        size, x - 8, y - 31, window_width, window_height, False  # 3, 26 - for .exe and 8, 31 - for .py
     )
 
 
@@ -172,7 +172,7 @@ def new_loop(show_buttons=False):
     move_window((monitor_size[0] - window_width) // 2, (monitor_size[1] - window_height) // 2)
     pygame.display.set_caption('Menu')
 
-    with open('score') as file:
+    with open('score.txt') as file:
         score = file.readline().split()[0]
 
     str_sizes = '-' * 28 + '\\n' + '\\n'.join(map(
