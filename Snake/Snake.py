@@ -18,15 +18,15 @@ START_LEN_SNAKE = 5
 
 def create_food():
     position = foods[0]
-    timeout = time() + 1
+    timeout = time() + 0.1
     while position in foods:
         if time() > timeout:
             break
         position = (randint(radius, window_width - radius), randint(radius, window_height - radius))
         position = (position[0] - position[0] % diameter + radius,
                     position[1] - position[1] % diameter + radius)
-        if position in snake:
-            break
+        if position in snake or position in foods:
+            continue
     else:
         foods.append(position)
     
@@ -59,7 +59,9 @@ def new_loop(window_size, difficult, increase_food_time, crash_wall, crash_self,
     can_crash_self = crash_self
 
     fps = 60
-    speed -= (difficult * difference_speed * (window_width + window_height / 2) / 2000)
+    speed += ((2 - difficult) * difference_speed * (window_width + window_height / 2) / 2000)
+    if speed <= 0:
+        speed = 0.1
     radius = (window_width + window_height) // 100
     diameter = radius * 2
     radius_food = radius // 2
@@ -152,7 +154,7 @@ def new_game():
     game_over_buttons = (button_restart_game_over, button_menu_game_over)
     pause_buttons = (button_continue, button_restart_pause, button_menu_pause, button_quit)
 
-    foods = [(-radius_food, -radius_food)]
+    foods = [(-window_width, -window_height)]
     speed_food_game = 0
     direction = (1, 0)
     iter_food = 0
@@ -177,7 +179,7 @@ def new_game():
                                 snake = snake[1:] + [(snake[-1][0] + diameter * direction[0],
                                                       snake[-1][1] + diameter * direction[1])]
                             direction = data[1]
-                    if not speed_snake:
+                    if not speed_snake and pygame.key != pygame.K_ESCAPE:
                         speed_snake = speed
                         speed_food_game = speed_food
                     if event.key == pygame.K_ESCAPE:
@@ -246,7 +248,7 @@ def new_game():
                 pygame.draw.rect(window, button.color, button.rect)
                 window.blit(text, text.get_rect(center=button.rect.center))
 
-        score_text = font.render(f'очки: {(len(snake) - START_LEN_SNAKE)}', True, text_color)
+        score_text = font.render(f'Очки: {(len(snake) - START_LEN_SNAKE)}', True, text_color)
         window.blit(score_text, (gap, gap))
         pygame.display.update()
 
@@ -272,13 +274,13 @@ def new_game():
         pygame.draw.circle(window, eye_color, (snake[-1][0], snake[-1][1]), radius_food)
 
         score = len(snake) - START_LEN_SNAKE
-        game_over_text_line1 = font.render(f'игра закончена! счёт: {len(snake) - 5}', True, game_over_text_color)
+        game_over_text_line1 = font.render(f'Игра закончена! Счёт: {len(snake) - 5}', True, game_over_text_color)
         if score <= best_score:
-            game_over_text_line2 = font.render(f'рекорд: {best_score}', True, game_over_text_color)
+            game_over_text_line2 = font.render(f'Рекорд: {best_score}', True, game_over_text_color)
         else:
-            game_over_text_line2 = font.render(f'предыдущий рекорд: {best_score}', True, game_over_text_color)
+            game_over_text_line2 = font.render(f'Предыдущий рекорд: {best_score}', True, game_over_text_color)
 
-        score_text = font.render(f'очки: {(len(snake) - 5)}', True, text_color)
+        score_text = font.render(f'Очки: {(len(snake) - 5)}', True, text_color)
         window.blit(score_text, (10, 10))
 
         window.blit(game_over_text_line1, (half_window_width - game_over_text_line1.get_width() // 2,

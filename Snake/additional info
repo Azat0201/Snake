@@ -1,0 +1,42 @@
+
+VERSION 1.0 - 15.11.23:
+-add games snake
+-add change difficulty
+-add other settings
+VERSION 1.1 - 28.03.24:
+-simplifying code
+-add pause button
+-add best score
+-add button changes size window
+-files with settings, colors and score
+-fixed many bugs
+VERSION 1.2 - 10.02.25:
+-simplifying code
+-changes system speed
+-bug #0000 fixed - speed now always is positive
+-extend description
+
+BUGS:
+#001 - when you start and dont move you press pause next press continue you start moving
+example:
+press start game -> dont move (dont press any keys) -> press escape -> press continue -> you start move (dont press any keys), but should dont move
+necessary
+#002 - when snake dont moving (speed <= 0 or other situations) you may unexpected moving with turns
+necessary (speed is positive if dont change code - condition)
+
+FUTURE CHANGES (PROBABLY):
+-add dark/light themes
+-add change size snake (not window) - for simple mode
+-change system choice radius for snake (and food)
+-increase size texts and look with sizes window
+-something do with choice size window (add many buttons size on left instead of text)
+-add background
+-add decoration
+-add fruit model
+-add grid mode
+-add links on my github
+-add music and sound effects
+-add rules in describes on left (do vanish when player see other describe)
+-add link on download
+-add advanced mode with walls (individual beast score)
+-add buttons difficulty and speed separate

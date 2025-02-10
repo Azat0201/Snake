@@ -178,42 +178,70 @@ def new_loop(show_buttons=False):
     str_sizes = '-' * 28 + '\\n' + '\\n'.join(map(
         lambda x: f'{x[0]} x {x[1]}{" - current size" if x == window_sizes[current_size_ind] else ""}', window_sizes)
     ) + ' ' + '-' * 28
-
-    buttons_data = (
-        (button_x, button_y * 1, start_game, 'Начать игру'),
-        (button_x, button_y * 2, change_difficult, difficulties[current_difficult], None, None, None, 'self'),
-        (button_x, button_y * 3, show_settings, 'Настройки'),
-        (button_x, button_y * 4, quit, 'Выйти'),
-        (button_x2, button_y * 1, change_is_increase_food_time, 'Увеличение времени создание еды от количества еды', show_buttons, is_increase_food_time, 'Увеличивает скорость появления еды для змейки в зависимости от количества её', 'self'),
-        (button_x2, button_y * 2, change_can_crash_wall, 'Врезаться в стены', show_buttons, can_crash_wall, 'Позволяет змейки проходить через стены', 'self'),
-        (button_x2, button_y * 3, change_can_crash_self, 'Врезаться в себя', show_buttons, can_crash_self, 'Позволяет змейки проходить через себя', 'self'),
-        (button_x2 - button_width / 8, button_y * 4, increase_size_window, f'{window_width}x{window_height}', show_buttons, None, str_sizes, 'self', button_width - button_width // 4),
-        (button_x2 + button_width / 2.5 - gap // 2, button_y * 4, decrease_size_window, '/\\', show_buttons, None, str_sizes, 'self', button_width // 4 - gap),
-        (button_x2, button_y * 5, reset_record, 'Сбросить рекорд', show_buttons,  None, 'Сбрасывает лучший результат'),
-        ((button_x - button_width / 4) / 2, button_y * 2, None, 'Вы уверенны?', False, None, None, None, None, None, None, None, False),
-        ((button_x - button_width / 4 - button_width / 2 - gap / 2) / 2, button_y * 3, activate, 'Да', False, None, None, None, (button_width - gap) / 2),
-        ((button_x - button_width / 4 + button_width / 2 + gap / 2) / 2, button_y * 3, hide_choice_button, 'Нет', False, None, None, None, (button_width - gap) / 2),
+    button_start_game_data = (button_x,  button_y * 1, start_game, 'Начать игру')
+    button_change_difficult_data = (
+        button_x, button_y * 2, change_difficult, difficulties[current_difficult],
+        None, None, None, 'self'
+    )
+    button_show_settings_data = (button_x, button_y * 3, show_settings, 'Настройки')
+    button_quit_data = (button_x, button_y * 4, quit, 'Выйти')
+    button_change_is_increase_food_time_data = (
+        button_x2, button_y * 1, change_is_increase_food_time,
+        'Увеличение времени создание еды от количества еды', show_buttons, is_increase_food_time,
+        'Увеличивает время появления новой еды для змейки в зависимости от количества её на карте (рекомендовано для баланса)',
+        'self'
+    )
+    button_change_can_crash_wall_data = (
+        button_x2, button_y * 2, change_can_crash_wall, 'Врезаться в стены', show_buttons, can_crash_wall,
+        'Позволяет змейки проходить через стены (рекомендовано отключить для сложности)', 'self'
+    )
+    button_change_can_crash_self_data = (
+        button_x2, button_y * 3, change_can_crash_self, 'Врезаться в себя', show_buttons, can_crash_self,
+        'Позволяет змейки проходить сквозь себя', 'self'
+    )
+    button_increase_size_window_data = (
+        (button_x2 - button_width / 8, button_y * 4, increase_size_window, f'{window_width}x{window_height}',
+         show_buttons, None, str_sizes, 'self', button_width - button_width // 4)
+    )
+    button_decrease_size_window_data = (
+        (button_x2 + button_width / 2.5 - gap // 2, button_y * 4, decrease_size_window, '/\\',
+         show_buttons, None, str_sizes, 'self', button_width // 4 - gap)
+    )
+    button_reset_record_data = (
+        button_x2, button_y * 5, reset_record, 'Сбросить рекорд', show_buttons, None, 'Сбрасывает лучший результат'
+    )
+    button_choice_data = (
+        (button_x - button_width / 4) / 2, button_y * 2, None, 'Вы уверенны?',
+        False, None, None, None, None, None, None, None, False
+    )
+    button_yes_data = (
+        (button_x - button_width * 3 / 4 - gap / 2) / 2, button_y * 3, activate, 'Да',
+        False, None, None, None, (button_width - gap) / 2
+    )
+    button_no_data = (
+        (button_x + button_width / 4 + gap / 2) / 2, button_y * 3, hide_choice_button, 'Нет',
+        False, None, None, None, (button_width - gap) / 2
     )
 
-    button_start = Button(*buttons_data[0])
-    button_difficulty = Button(*buttons_data[1])
-    button_show_settings = Button(*buttons_data[2])
-    button_exit = Button(*buttons_data[3])
-    button_increase = Button(*buttons_data[4])
-    button_can_wall = Button(*buttons_data[5])
-    button_can_self = Button(*buttons_data[6])
-    button_change_size = Button(*buttons_data[7])
-    button_increase_size = Button(*buttons_data[8])
-    button_reset_record = Button(*buttons_data[9])
-    button_no = Button(*buttons_data[-1])
-    button_yes = Button(*buttons_data[-2])
-    button_choice = Button(*buttons_data[-3])
+    button_start = Button(*button_start_game_data)
+    button_difficulty = Button(*button_change_difficult_data)
+    button_show_settings = Button(*button_show_settings_data)
+    button_quit = Button(*button_quit_data)
+    button_increase_food_time = Button(*button_change_is_increase_food_time_data)
+    button_can_wall = Button(*button_change_can_crash_wall_data)
+    button_can_self = Button(*button_change_can_crash_self_data)
+    button_increase_size = Button(*button_increase_size_window_data)
+    button_decrease_size = Button(*button_decrease_size_window_data)
+    button_reset_record = Button(*button_reset_record_data)
+    button_choice = Button(*button_choice_data)
+    button_yes = Button(*button_yes_data)
+    button_no = Button(*button_no_data)
 
     button_reset_record.parameters = (button_yes,)
 
-    setting_buttons = (button_increase, button_can_wall, button_can_self, button_change_size, button_increase_size, button_reset_record)
+    setting_buttons = (button_increase_food_time, button_can_wall, button_can_self, button_increase_size, button_decrease_size, button_reset_record)
     choice_buttons = (button_choice, button_no, button_yes)
-    buttons = (button_start, button_difficulty, button_show_settings, button_exit) + setting_buttons + choice_buttons
+    buttons = (button_start, button_difficulty, button_show_settings, button_quit) + setting_buttons + choice_buttons
 
     while True:
         clock.tick(fps)
@@ -240,7 +268,7 @@ def new_loop(show_buttons=False):
                 pygame.draw.rect(window, button.color, button.rect)
                 show_text(button.text, button.position[0], button.rect.y, button.width, button.height)
 
-        score_text = font.render(f'рекорд: {score}', True, text_color)
+        score_text = font.render(f'Рекорд: {score}', True, text_color)
         window.blit(score_text, (gap, gap))
 
         pygame.display.update()
